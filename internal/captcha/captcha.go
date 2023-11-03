@@ -9,7 +9,6 @@ import (
 
 	"github.com/google/uuid"
 	cmap "github.com/orcaman/concurrent-map/v2"
-	"github.com/virzz/logger"
 )
 
 var (
@@ -62,9 +61,6 @@ func Check(id, code string) (bool, error) {
 
 // Check 验证验证码是否正确
 func CheckOk(id, code string) bool {
-	ok, err := Check(id, code)
-	if err != nil {
-		logger.Warn(err)
-	}
+	ok, _ := Check(id, code)
 	return ok
 }

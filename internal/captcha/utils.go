@@ -72,7 +72,7 @@ func unFixedRect(b fixed.Rectangle26_6) image.Rectangle {
 	return image.Rect(drawRect(b))
 }
 
-func GetFontFace(buf []byte, fontSize float64, dpi ...float64) (font.Face, error) {
+func getFontFace(buf []byte, fontSize float64, dpi ...float64) (font.Face, error) {
 	obj, err := sfnt.Parse(buf)
 	if err != nil {
 		return nil, err
@@ -98,4 +98,9 @@ func randColor(alpha ...bool) color.Color {
 		a = buf[3]
 	}
 	return color.RGBA{uint8(buf[0]), uint8(buf[1]), uint8(buf[2]), a}
+}
+
+func nBitNum(bit int) int64 {
+	x := math.Pow10(bit - 1)
+	return rand.Int63n(int64(math.Pow10(bit)-x)) + int64(x)
 }

@@ -47,7 +47,7 @@ func WithFontName(fontName string, fontSize float64, dpi ...float64) Option {
 }
 func WithFontByte(buf []byte, fontSize float64, dpi ...float64) Option {
 	return func(cb *CaptchaBase) {
-		fontFace, err := GetFontFace(buf, fontSize, dpi...)
+		fontFace, err := getFontFace(buf, fontSize, dpi...)
 		if err != nil {
 			logger.Error(err)
 			return
