@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"image"
 	"image/png"
+	"sync"
 	"time"
 
 	"github.com/google/uuid"
@@ -13,7 +14,21 @@ import (
 
 var (
 	captchaMap = cmap.New[*CaptchaData]()
+	once       sync.Once
 )
+
+func init() {
+	go once.Do(func() {
+		for {
+			time.Sleep(time.Minute)
+			captchaMap.IterCb(func(key string, value *CaptchaData) {
+				if value.Expire <= time.Now().Unix() {
+					captchaMap.Remove(key)
+				}
+			})
+		}
+	})
+}
 
 // Create 创建验证码，返回图片对象image.Image
 func Create(s Captcha) (id, result string, img image.Image) {
