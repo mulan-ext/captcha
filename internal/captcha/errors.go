@@ -1,10 +1,17 @@
 package captcha
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+)
 
 type CaptchaErr struct {
 	ErrCode int
 	error
+}
+
+func (e CaptchaErr) Error() string {
+	return fmt.Sprintf("%d : %s", e.ErrCode, e.error.Error())
 }
 
 var (
