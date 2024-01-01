@@ -9,10 +9,6 @@ import (
 	"github.com/virzz/logger"
 )
 
-// func TestCheckEquation(t *testing.T) {
-// 	c := NewCaptchaEquation()
-// }
-
 func TestEquationDraw(t *testing.T) {
 	c := NewCaptchaEquation(2)
 	_, d := c.Draw()

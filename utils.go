@@ -3,7 +3,6 @@ package captcha
 import (
 	crand "crypto/rand"
 	"encoding/hex"
-	"image"
 	"image/color"
 	"math"
 	"math/rand"
@@ -68,9 +67,9 @@ func drawRect(fr fixed.Rectangle26_6) (x, y, width, height int) {
 	return 0, 0, int(fr.Max.X+fr.Min.X) >> 6, int(fr.Max.Y+fr.Min.Y)>>6 + 1
 }
 
-func unFixedRect(b fixed.Rectangle26_6) image.Rectangle {
-	return image.Rect(drawRect(b))
-}
+// func unFixedRect(b fixed.Rectangle26_6) image.Rectangle {
+// 	return image.Rect(drawRect(b))
+// }
 
 func getFontFace(buf []byte, fontSize float64, dpi ...float64) (font.Face, error) {
 	obj, err := sfnt.Parse(buf)

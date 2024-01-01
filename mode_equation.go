@@ -18,31 +18,36 @@ type CaptchaEquation struct {
 
 var _ Captcha = (*CaptchaEquation)(nil)
 
-func DefaultCaptchaEquation() *CaptchaEquation {
-	return &CaptchaEquation{
-		CaptchaBase: New(
-			WithSize(102, 30), WithFontByte(fontData, 24),
-			WithBackground(color.Black), WithFront(color.White),
-			WithPoint(100),
-			WithLine(6),
-		),
-		bit: 2,
-	}
+var Equation = DefaultCaptchaEquation()
+
+func DefaultCaptchaEquation() Captcha {
+	return NewCaptchaEquation(2)
 }
 
-func NewCaptchaEquation(bit int, opts ...Option) *CaptchaEquation {
+func NewCaptchaEquation(bit int, opts ...Option) Captcha {
 	if bit <= 0 {
 		panic("bit must be greater than 0")
 	}
-	return &CaptchaEquation{
+	std = &CaptchaEquation{
 		CaptchaBase: New(
-			WithSize(102, 30), WithFontByte(fontData, 24),
-			WithBackground(color.Black), WithFront(color.White),
+			WithSize(102, 30),
+			WithFontByte(fontData, 24),
+			WithBackground(color.Black),
+			WithFront(color.White),
 			WithPoint(100),
 			WithLine(6),
 		).Options(opts...),
 		bit: bit,
 	}
+	return std
+}
+
+func (c *CaptchaEquation) Draw() (image.Image, *CaptchaData) {
+	text, result := randomText(c.bit)
+	img, cd := c.CaptchaBase.draw(text)
+	cd.Result = result
+	logger.DebugF("CaptchaEquation: %s = %s", text, result)
+	return img, cd
 }
 
 const (
@@ -89,12 +94,4 @@ func randomText(bit int) (content, result string) {
 		buf.WriteString(strconv.FormatInt(right, 10))
 	}
 	return buf.String(), strconv.FormatInt(resultNum, 10)
-}
-
-func (c *CaptchaEquation) Draw() (image.Image, *CaptchaData) {
-	text, result := randomText(c.bit)
-	img, cd := c.CaptchaBase.draw(text)
-	cd.Result = result
-	logger.DebugF("CaptchaEquation: %s = %s", text, result)
-	return img, cd
 }

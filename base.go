@@ -12,18 +12,6 @@ import (
 	"golang.org/x/image/font/sfnt"
 )
 
-type ModeType int
-
-const (
-	ModeString      ModeType = iota + 1 // 数字+字母
-	ModeStringClear                     // 数字+字母(去除部分易混淆的字符)
-	ModeDigit                           // 数字
-	ModeLower                           // 小写字母
-	ModeUpper                           // 大写字母
-	ModeAlphabet                        // 字母
-	ModeEquation                        // 算式
-)
-
 type Captcha interface {
 	Draw() (image.Image, *CaptchaData) // 验证码生成逻辑并绘制图片
 }

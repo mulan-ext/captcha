@@ -7,13 +7,10 @@ import (
 	"os/exec"
 	"testing"
 	"time"
-
-	"github.com/virzz/captcha/internal/captcha"
-	"github.com/virzz/logger"
 )
 
 func TestEquation(t *testing.T) {
-	SetMode(captcha.ModeEquation)
+	SetCaptcha(Equation)
 	// Create()
 	img, cd := std.Draw()
 	fmt.Printf("%+v", cd)
@@ -35,9 +32,9 @@ func TestCreateB64(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	logger.Info(id)
-	logger.Info(result)
-	logger.Info(time.Now().Unix())
+	fmt.Println(id)
+	fmt.Println(result)
+	fmt.Println(time.Now().Unix())
 	if !CheckOk(id, result) {
 		t.Fail()
 	}

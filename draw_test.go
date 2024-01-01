@@ -65,6 +65,7 @@ func TestCheck(t *testing.T) {
 		t.Fail()
 	}
 	exec.Command("open", "./test.png").Run()
+	defer os.Remove("./test.png")
 }
 
 func TestDrawArcLine2(t *testing.T) {
