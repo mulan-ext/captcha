@@ -38,5 +38,10 @@ func TestCreateB64(t *testing.T) {
 	if !CheckOk(id, result) {
 		t.Fail()
 	}
+}
 
+func BenchmarkCreate(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		Create()
+	}
 }

@@ -6,7 +6,6 @@ import (
 	"image/draw"
 	"math/rand"
 
-	"github.com/virzz/logger"
 	"golang.org/x/image/font"
 	"golang.org/x/image/math/fixed"
 )
@@ -20,9 +19,6 @@ func BoundString(content string, fontFace font.Face) (width, height int) {
 	drawer := &font.Drawer{Face: fontFace, Dot: fixed.P(0, fontFace.Metrics().Ascent.Floor())}
 	db, _ := drawer.BoundString(content)
 	_, _, width, height = drawRect(db)
-	logger.Info("字体大小: ", fontFace.Metrics().Ascent.Floor())
-	logger.Info("文本长度: ", len(content))
-	logger.InfoF("图片大小: (0,0)-(%d,%d)", width, height)
 	return
 }
 

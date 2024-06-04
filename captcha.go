@@ -3,8 +3,10 @@ package captcha
 import (
 	"bytes"
 	"encoding/base64"
+	"fmt"
 	"image"
 	"image/png"
+	"os"
 	"sync"
 	"time"
 
@@ -79,6 +81,10 @@ func create(s Captcha) (id, result string, img image.Image) {
 	img, cd := s.Draw()
 	id = uuid.New().String()
 	captchaMap.Set(id, cd)
+	if r := recover(); r != nil {
+		fmt.Fprintln(os.Stderr, r)
+		return create(s)
+	}
 	return id, cd.Result, img
 }
 

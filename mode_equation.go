@@ -7,8 +7,6 @@ import (
 	"math"
 	"math/rand"
 	"strconv"
-
-	"github.com/virzz/logger"
 )
 
 type CaptchaEquation struct {
@@ -46,7 +44,6 @@ func (c *CaptchaEquation) Draw() (image.Image, *CaptchaData) {
 	text, result := randomText(c.bit)
 	img, cd := c.CaptchaBase.draw(text)
 	cd.Result = result
-	logger.DebugF("CaptchaEquation: %s = %s", text, result)
 	return img, cd
 }
 
