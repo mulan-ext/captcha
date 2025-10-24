@@ -1,47 +1,58 @@
-package captcha
+package captcha_test
 
 import (
 	"fmt"
-	"image/png"
-	"os"
-	"os/exec"
 	"testing"
-	"time"
+
+	"github.com/mulan-ext/captcha"
 )
 
-func TestEquation(t *testing.T) {
-	SetCaptcha(Equation)
-	// Create()
-	img, cd := std.Draw()
-	fmt.Printf("%+v", cd)
-	// 输出文件
-	f, err := os.OpenFile("./test.png", os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0644)
-	if err != nil {
-		t.Error(err)
+func TestCreate(t *testing.T) {
+	id, result, _ := captcha.Create()
+	fmt.Println("id", id, "result", result)
+	if ok, _ := captcha.Check(id, result); !ok {
+		t.Fail()
 	}
-	defer f.Close()
-	err = png.Encode(f, img)
+}
+
+func TestCreateBytes(t *testing.T) {
+	id, result, _, err := captcha.CreateBytes()
 	if err != nil {
-		t.Error(err)
+		fmt.Println(err)
+		return
 	}
-	exec.Command("open", "./test.png").Run()
+	fmt.Println("id", id, "result", result)
+	if ok, _ := captcha.Check(id, result); !ok {
+		t.Fail()
+	}
 }
 
 func TestCreateB64(t *testing.T) {
-	id, result, _, err := CreateB64()
+	id, result, _, err := captcha.CreateB64()
 	if err != nil {
-		t.Error(err)
+		fmt.Println(err)
+		return
 	}
-	fmt.Println(id)
-	fmt.Println(result)
-	fmt.Println(time.Now().Unix())
-	if !CheckOk(id, result) {
+	fmt.Println("id", id, "result", result)
+	if ok, _ := captcha.Check(id, result); !ok {
 		t.Fail()
 	}
 }
 
 func BenchmarkCreate(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		Create()
+	for b.Loop() {
+		captcha.Create()
+	}
+}
+
+func BenchmarkCreateBytes(b *testing.B) {
+	for b.Loop() {
+		captcha.CreateBytes()
+	}
+}
+
+func BenchmarkCreateB64(b *testing.B) {
+	for b.Loop() {
+		captcha.CreateB64()
 	}
 }

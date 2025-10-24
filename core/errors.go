@@ -1,4 +1,4 @@
-package captcha
+package core
 
 import (
 	"errors"

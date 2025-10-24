@@ -1,6 +1,6 @@
-module github.com/virzz/captcha
+module github.com/mulan-ext/captcha
 
-go 1.19
+go 1.25
 
 require (
 	github.com/google/uuid v1.6.0
@@ -9,6 +9,6 @@ require (
 )
 
 require (
-	golang.org/x/image v0.16.0
-	golang.org/x/text v0.15.0 // indirect
+	golang.org/x/image v0.32.0
+	golang.org/x/text v0.30.0 // indirect
 )
