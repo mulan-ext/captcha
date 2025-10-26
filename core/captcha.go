@@ -23,18 +23,21 @@ var _ ICache = (*Captcha)(nil)
 type (
 	Generator func() (string, string)
 	Captcha   struct {
-		isInit          bool
-		once            sync.Once
-		bucket          cmap.ConcurrentMap[string, *Data]
-		fontFace        font.Face
-		width, height   int
-		bg, front       color.Color
-		fontSize        int
-		expire          int64
-		line, point     int
-		rotate, distort int
-
+		bucket    cmap.ConcurrentMap[string, *Data]
+		bg        color.Color
+		front     color.Color
+		fontFace  font.Face
 		Generator Generator
+		fontSize  int
+		height    int
+		expire    int64
+		line      int
+		point     int
+		rotate    int
+		distort   int
+		width     int
+		once      sync.Once
+		isInit    bool
 	}
 )
 

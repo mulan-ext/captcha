@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 	"math"
@@ -11,6 +12,11 @@ import (
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
 	"golang.org/x/image/font/sfnt"
+)
+
+var (
+	ErrCodeExpired = fmt.Errorf("验证码已过期")
+	ErrCodeInvalid = fmt.Errorf("验证码无效")
 )
 
 type ICache interface {
