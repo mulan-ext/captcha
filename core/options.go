@@ -4,7 +4,7 @@ import (
 	"image/color"
 	"os"
 
-	"github.com/virzz/logger"
+	"go.uber.org/zap"
 	"golang.org/x/image/font"
 )
 
@@ -50,7 +50,7 @@ func WithFontName(fontName string, fontSize int, dpi int) Option {
 	return func(b *Captcha) {
 		buf, err := os.ReadFile(fontName)
 		if err != nil {
-			logger.Error(err)
+			zap.L().Warn("Failed to read font", zap.Error(err))
 		} else {
 			WithFontByte(buf, fontSize, dpi)(b)
 		}
@@ -61,7 +61,7 @@ func WithFontByte(buf []byte, fontSize int, dpi int) Option {
 	return func(b *Captcha) {
 		fontFace, err := GetFontFace(buf, fontSize, dpi)
 		if err != nil {
-			logger.Error(err)
+			zap.L().Warn("Failed to get fontface", zap.Error(err))
 			return
 		}
 		WithFont(fontFace, fontSize)(b)

@@ -8,7 +8,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/virzz/logger"
 	"golang.org/x/image/font"
 	"golang.org/x/image/font/opentype"
 	"golang.org/x/image/font/sfnt"
@@ -79,13 +78,11 @@ func TestCheck(t *testing.T) {
 	// 输出文件
 	f, err := os.OpenFile("./_test.png", os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0644)
 	if err != nil {
-		logger.Error(err)
 		t.Fail()
 	}
 	defer f.Close()
 	err = png.Encode(f, img)
 	if err != nil {
-		logger.Error(err)
 		t.Fail()
 	}
 }
@@ -103,13 +100,11 @@ func TestDraw(t *testing.T) {
 		drawText("98-77=?", fontSize, fontFace, color.Black)
 	f, err := os.OpenFile("../_test.png", os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0644)
 	if err != nil {
-		logger.Error(err)
 		t.Fail()
 	}
 	defer f.Close()
 	err = png.Encode(f, img)
 	if err != nil {
-		logger.Error(err)
 		t.Fail()
 	}
 }
