@@ -1,11 +1,11 @@
 module github.com/mulan-ext/captcha
 
-go 1.25.6
+go 1.26.5
 
 require (
 	github.com/google/uuid v1.6.0
 	github.com/orcaman/concurrent-map/v2 v2.0.1
-	go.uber.org/zap v1.27.1
+	go.uber.org/zap v1.28.0
 )
 
 require (
@@ -16,6 +16,6 @@ require (
 )
 
 require (
-	golang.org/x/image v0.38.0
-	golang.org/x/text v0.35.0 // indirect
+	golang.org/x/image v0.44.0
+	golang.org/x/text v0.40.0 // indirect
 )
