@@ -9,7 +9,7 @@ import (
 	"image/color"
 	"image/png"
 	"os"
-	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/google/uuid"
@@ -36,8 +36,7 @@ type (
 		rotate    int
 		distort   int
 		width     int
-		once      sync.Once
-		isInit    bool
+		cleanupAt atomic.Int64
 	}
 )
 
@@ -49,6 +48,8 @@ func (c *Captcha) Options(opts ...Option) *Captcha {
 }
 
 func (c *Captcha) Draw() (string, *Data, image.Image) {
+	now := time.Now().Unix()
+	c.cleanupExpired(now)
 	// Generate
 	text, result := c.Generator()
 	// Draw Image
@@ -63,7 +64,7 @@ func (c *Captcha) Draw() (string, *Data, image.Image) {
 	data := &Data{
 		Content: text,
 		Result:  result,
-		Expire:  c.expire + time.Now().Unix(),
+		Expire:  c.expire + now,
 	}
 	id := uuid.New().String()
 	c.bucket.Set(id, data)
@@ -72,22 +73,23 @@ func (c *Captcha) Draw() (string, *Data, image.Image) {
 
 // Init 初始化验证码
 func (c *Captcha) Init() *Captcha {
-	if c.isInit {
-		return c
+	c.cleanupExpired(time.Now().Unix())
+	return c
+}
+
+func (c *Captcha) cleanupExpired(now int64) {
+	previous := c.cleanupAt.Load()
+	if previous != 0 && now-previous < int64(time.Minute/time.Second) {
+		return
 	}
-	c.isInit = true
-	go c.once.Do(func() {
-		for {
-			time.Sleep(time.Minute)
-			now := time.Now().Unix()
-			c.bucket.IterCb(func(key string, value *Data) {
-				if value.Expire <= now {
-					c.bucket.Remove(key)
-				}
-			})
+	if !c.cleanupAt.CompareAndSwap(previous, now) {
+		return
+	}
+	c.bucket.IterCb(func(key string, value *Data) {
+		if value.Expire <= now {
+			c.bucket.Remove(key)
 		}
 	})
-	return c
 }
 
 func (c *Captcha) Get(id string) (*Data, bool) { return c.bucket.Get(id) }

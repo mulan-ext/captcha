@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image/png"
 	"os"
+	"path/filepath"
 	"testing"
 )
 
@@ -30,7 +31,7 @@ func TestRandom(t *testing.T) {
 	id, cd, img := ce.Draw()
 	fmt.Printf("id: %s, result: %s, data: %+v\n", id, cd.Result, cd)
 	// 输出文件
-	f, err := os.OpenFile("../_test.png", os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0644)
+	f, err := os.OpenFile(filepath.Join(t.TempDir(), "test.png"), os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0600)
 	if err != nil {
 		t.Error(err)
 	}

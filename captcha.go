@@ -1,52 +1,45 @@
 package captcha
 
 import (
-	"bytes"
-	"encoding/base64"
-	"fmt"
 	"image"
-	"image/png"
-	"os"
+	"sync"
 
 	"github.com/mulan-ext/captcha/core"
 	"github.com/mulan-ext/captcha/equation"
 )
 
-var std core.ICaptcha = equation.NewEquation(2)
+var (
+	std   core.ICaptcha = equation.NewEquation(2)
+	stdMu sync.RWMutex
+)
 
-func SetGlobal(m core.ICaptcha) { std = m }
+func SetGlobal(m core.ICaptcha) {
+	stdMu.Lock()
+	std = m
+	stdMu.Unlock()
+}
+
+func global() core.ICaptcha {
+	stdMu.RLock()
+	defer stdMu.RUnlock()
+	return std
+}
 
 // Create 创建验证码，返回图片对象image.Image
 func Create() (id, result string, img image.Image) {
-	id, cd, img := std.Draw()
-	if r := recover(); r != nil {
-		fmt.Fprintln(os.Stderr, r)
-		return std.Create()
-	}
-	return id, cd.Result, img
+	return global().Create()
 }
 
 // CreateBytes 创建验证码，返回图片数据[]byte
 func CreateBytes() (id, result string, buf []byte, err error) {
-	id, result, img := std.Create()
-	_buf := new(bytes.Buffer)
-	err = png.Encode(_buf, img)
-	if err != nil {
-		return "", "", nil, err
-	}
-	return id, result, _buf.Bytes(), nil
+	return global().CreateBytes()
 }
 
 // CreateB64 创建验证码，返回图片base64
 func CreateB64() (id, result, data string, err error) {
-	id, result, buf, err := std.CreateBytes()
-	if err != nil {
-		return "", "", "", err
-	}
-	data = "data:image/png;base64," + base64.StdEncoding.EncodeToString(buf)
-	return id, result, data, nil
+	return global().CreateB64()
 }
 
 func Check(id, code string) (bool, error) {
-	return std.Check(id, code)
+	return global().Check(id, code)
 }

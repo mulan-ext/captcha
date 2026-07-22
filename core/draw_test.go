@@ -6,6 +6,7 @@ import (
 	"image/color"
 	"image/png"
 	"os"
+	"path/filepath"
 	"testing"
 
 	"golang.org/x/image/font"
@@ -76,7 +77,7 @@ func TestCheck(t *testing.T) {
 	drawer.Dst = img
 	drawer.DrawString(content)
 	// 输出文件
-	f, err := os.OpenFile("./_test.png", os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0644)
+	f, err := os.OpenFile(filepath.Join(t.TempDir(), "test.png"), os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0600)
 	if err != nil {
 		t.Fail()
 	}
@@ -98,7 +99,7 @@ func TestDraw(t *testing.T) {
 	img := newCaptcha(120, 50).
 		fillBkg(color.White).
 		drawText("98-77=?", fontSize, fontFace, color.Black)
-	f, err := os.OpenFile("../_test.png", os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0644)
+	f, err := os.OpenFile(filepath.Join(t.TempDir(), "test.png"), os.O_CREATE|os.O_TRUNC|os.O_RDWR, 0600)
 	if err != nil {
 		t.Fail()
 	}

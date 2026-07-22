@@ -2,9 +2,11 @@ package captcha_test
 
 import (
 	"fmt"
+	"sync"
 	"testing"
 
 	"github.com/mulan-ext/captcha"
+	"github.com/mulan-ext/captcha/equation"
 )
 
 func TestCreate(t *testing.T) {
@@ -13,6 +15,18 @@ func TestCreate(t *testing.T) {
 	if ok, _ := captcha.Check(id, result); !ok {
 		t.Fail()
 	}
+}
+
+func TestSetGlobalConcurrentAccess(t *testing.T) {
+	defer captcha.SetGlobal(equation.NewEquation(2))
+	var wait sync.WaitGroup
+	for range 8 {
+		wait.Go(func() {
+			captcha.SetGlobal(equation.NewEquation(1))
+			_, _, _ = captcha.Create()
+		})
+	}
+	wait.Wait()
 }
 
 func TestCreateBytes(t *testing.T) {

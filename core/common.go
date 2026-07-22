@@ -6,7 +6,6 @@ import (
 	"image/color"
 	"math"
 	"math/rand"
-	"sync"
 
 	cmap "github.com/orcaman/concurrent-map/v2"
 	"golang.org/x/image/font"
@@ -52,7 +51,6 @@ func DefaultFontFace(size int) font.Face {
 func DefaultCaptcha() *Captcha {
 	fontSize := 32
 	return &Captcha{
-		once:     sync.Once{},
 		bucket:   cmap.New[*Data](),
 		width:    128,
 		height:   52,
